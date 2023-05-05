@@ -1,0 +1,27 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Development" type="DotNetProject" factoryName=".NET Project">
+    <option name="EXE_PATH" value="$PROJECT_DIR$/Rinkudesu.Identity.Service/bin/Debug/net7.0/Rinkudesu.Identity.Service.exe" />
+    <option name="PROGRAM_PARAMETERS" value="--applyMigrations" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Rinkudesu.Identity.Service" />
+    <option name="PASS_PARENT_ENVS" value="1" />
+    <envs>
+      <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
+      <env name="ASPNETCORE_URLS" value="http://localhost:5500" />
+      <env name="RINKU_IDENTITY_CONNECTIONSTRING" value="Server=127.0.0.1;Port=5432;Database=rinku-identity;User Id=postgres;Password=postgres" />
+      <env name="RINKUDESU_REDIS_ADDRESS" value="127.0.0.1:6379" />
+      <env name="RINKU_IDENTITY_BASEURL" value="http://localhost:5500/" />
+    </envs>
+    <option name="USE_EXTERNAL_CONSOLE" value="0" />
+    <option name="USE_MONO" value="0" />
+    <option name="RUNTIME_ARGUMENTS" value="" />
+    <option name="PROJECT_PATH" value="$PROJECT_DIR$/Rinkudesu.Identity.Service/Rinkudesu.Identity.Service.csproj" />
+    <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+    <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+    <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+    <option name="PROJECT_KIND" value="DotNetCore" />
+    <option name="PROJECT_TFM" value="net7.0" />
+    <method v="2">
+      <option name="Build" />
+    </method>
+  </configuration>
+</component>
