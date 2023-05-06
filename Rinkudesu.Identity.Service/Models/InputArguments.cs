@@ -16,10 +16,9 @@ public class InputArguments
 
 #if DEBUG
     // not sure what that is but is apparently set during migration creation, so to avoid issues let's just set it here
-    [Option(longName: "applicationName", Required = false)]
-    public string ApplicationName { get; set; }
-    [Option(longName: "newMigration", Required = false)]
-    public bool NewMigrationCreation { get; set; }
+    [Option(longName: "applicationName", Required = false, HelpText = "DON'T USE: this is an argument that's inexplicably passed by ef when creating a new migration. When set, the application will treat it as a sign that a new migration is being created and will not start.")]
+    public string ApplicationName { get; set; } = string.Empty;
+    public bool NewMigrationCreation => !string.IsNullOrWhiteSpace(ApplicationName);
 #endif
 
     public void SaveAsCurrent()
