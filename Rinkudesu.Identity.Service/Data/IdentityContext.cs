@@ -1,4 +1,5 @@
 ﻿#pragma warning disable CS1591
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Rinkudesu.Identity.Service.Models;
 
 namespace Rinkudesu.Identity.Service.Data;
 
+[ExcludeFromCodeCoverage]
 public class IdentityContext : IdentityDbContext<User, Role, Guid>
 {
     public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
