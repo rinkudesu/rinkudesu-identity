@@ -7,9 +7,10 @@
     <envs>
       <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
       <env name="ASPNETCORE_URLS" value="http://localhost:5500" />
-      <env name="RINKU_IDENTITY_CONNECTIONSTRING" value="Server=127.0.0.1;Port=5432;Database=rinku-identity;User Id=postgres;Password=postgres" />
-      <env name="RINKUDESU_REDIS_ADDRESS" value="127.0.0.1:6379" />
       <env name="RINKU_IDENTITY_BASEURL" value="http://localhost:5500/" />
+      <env name="RINKU_IDENTITY_CONNECTIONSTRING" value="Server=127.0.0.1;Port=5432;Database=rinku-identity;User Id=postgres;Password=postgres" />
+      <env name="RINKU_IDENTITY_REDIS" value="127.0.0.1:6379" />
+      <env name="RINKU_RSA_PASSWORD" value="test" />
     </envs>
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />

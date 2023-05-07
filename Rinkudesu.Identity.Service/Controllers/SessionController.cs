@@ -5,7 +5,8 @@ using Rinkudesu.Identity.Service.Models;
 
 namespace Rinkudesu.Identity.Service.Controllers;
 
-[ApiController, Route("api/[controller]")]
+[ApiController]
+[ApiVersion("1"), Route("api/[controller]"), Route("api/v{version:apiVersion}/[controller]")]
 public class SessionController : ControllerBase
 {
     private readonly UserManager<User> _userManager;

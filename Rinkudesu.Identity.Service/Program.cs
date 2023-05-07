@@ -1,6 +1,7 @@
 #pragma warning disable CA1852
 #pragma warning disable CA1303
 #pragma warning disable CA1305
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using CommandLine;
 using Microsoft.AspNetCore.DataProtection;
@@ -14,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Rinkudesu.Gateways.Webui.Models;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.Models;
+using Rinkudesu.Identity.Service.Repositories;
 using Rinkudesu.Identity.Service.Services;
 using Rinkudesu.Identity.Service.Utilities;
 using Rinkudesu.Services.Links.HealthChecks;
@@ -55,7 +57,7 @@ Log.Logger = logConfig.CreateBootstrapLogger();
 
 try
 {
-    var baseUrl = EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.BaseUrlVariableName).TrimEnd('/');
+    var baseUrl = EnvironmentalVariablesReader.GetBaseUrl();
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -131,6 +133,9 @@ try
 #endif
     });
 
+    RegisterOtherServices(builder);
+
+
     builder.Services.AddApiVersioning(o => {
         o.AssumeDefaultVersionWhenUnspecified = true;
         o.DefaultApiVersion = new ApiVersion(1, 0);
@@ -196,3 +201,9 @@ finally
     await Log.CloseAndFlushAsync();
 }
 return 0;
+
+void RegisterOtherServices(WebApplicationBuilder builder)
+{
+    builder.Services.AddSingleton<JwtKeysRepository>();
+    builder.Services.AddTransient<JwtSecurityTokenHandler>();
+}
