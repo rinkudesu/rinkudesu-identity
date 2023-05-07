@@ -16,7 +16,7 @@ namespace Rinkudesu.Identity.Service.Controllers;
 /// Controller responsible for JWT management, providing endpoints required for issuing and verifying tokens.
 /// </summary>
 [ApiController]
-[ApiVersion("v1"), Route("api/[controller]"), Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1"), Route("api/[controller]"), Route("api/v{version:apiVersion}/[controller]")]
 public class JwtController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
