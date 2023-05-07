@@ -21,10 +21,11 @@ public class JwtKeysRepository
         if (string.IsNullOrEmpty(fileName))
             throw new InvalidOperationException($"JWK RSA keys need to be stored in the {CERT_DIR_NAME} folder.");
         var rsaPassword = EnvironmentalVariablesReader.GetOptionalVariable(EnvironmentalVariablesReader.JwtRsaPasswordVariableName);
+        var rsaInput = File.ReadAllText(fileName);
         if (string.IsNullOrEmpty(rsaPassword))
-            rsa.ImportFromPem(fileName);
+            rsa.ImportFromPem(rsaInput);
         else
-            rsa.ImportFromEncryptedPem(fileName, rsaPassword);
+            rsa.ImportFromEncryptedPem(rsaInput, rsaPassword);
         return rsa;
     });
 
