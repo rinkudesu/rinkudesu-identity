@@ -3,6 +3,7 @@ using System.Text;
 using Konscious.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Rinkudesu.Identity.Service.Models;
+using Rinkudesu.Identity.Service.Utilities;
 
 namespace Rinkudesu.Identity.Service.Services;
 
@@ -11,7 +12,7 @@ namespace Rinkudesu.Identity.Service.Services;
 /// </summary>
 public class ArgonPasswordHasher : IPasswordHasher<User>
 {
-    private readonly byte[] tempsecrettomove = "move this string to settings you idiot"u8.ToArray();
+    private static readonly Lazy<byte[]> _argonSecret = new Lazy<byte[]>(ArgonSettingsReader.GetSecret);
 
     /// <inheritdoc/>
     public string HashPassword(User user, string password)
@@ -49,7 +50,7 @@ public class ArgonPasswordHasher : IPasswordHasher<User>
             DegreeOfParallelism = 4,
             MemorySize = 256 * 1024,
             Salt = salt,
-            KnownSecret = tempsecrettomove,
+            KnownSecret = _argonSecret.Value,
         };
         var hash = argon.GetBytes(256);
         return GetFullString(argon, hash);

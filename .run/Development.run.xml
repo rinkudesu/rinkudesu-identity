@@ -11,6 +11,7 @@
       <env name="RINKU_IDENTITY_CONNECTIONSTRING" value="Server=127.0.0.1;Port=5432;Database=rinku-identity;User Id=postgres;Password=postgres" />
       <env name="RINKU_IDENTITY_REDIS" value="127.0.0.1:6379" />
       <env name="RINKU_RSA_PASSWORD" value="test" />
+      <env name="RINKU_ARGON_SECRET" value="not secure not random definitely string" />
     </envs>
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
