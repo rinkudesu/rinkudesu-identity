@@ -8,7 +8,7 @@ public class User : IdentityUser<Guid>
 {
     #region database type changes from text to varchar
 
-    [MaxLength(500), DataType(DataType.Password)]
+    [MaxLength(2048), DataType(DataType.Password)]
     public override string? PasswordHash { get; set; }
     [MaxLength(500)]
     public override string? SecurityStamp { get; set; }
