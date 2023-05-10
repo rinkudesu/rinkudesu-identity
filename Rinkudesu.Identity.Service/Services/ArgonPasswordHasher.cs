@@ -12,7 +12,8 @@ namespace Rinkudesu.Identity.Service.Services;
 /// </summary>
 public class ArgonPasswordHasher : IPasswordHasher<User>
 {
-    private static readonly Lazy<byte[]> _argonSecret = new Lazy<byte[]>(ArgonSettingsReader.GetSecret);
+    //this value can be static as it will basically never change for the entire life of the application
+    private static readonly Lazy<byte[]> argonSecret = new Lazy<byte[]>(ArgonSettingsReader.GetSecret);
 
     /// <inheritdoc/>
     public string HashPassword(User user, string password)
@@ -50,7 +51,7 @@ public class ArgonPasswordHasher : IPasswordHasher<User>
             DegreeOfParallelism = 4,
             MemorySize = 256 * 1024,
             Salt = salt,
-            KnownSecret = _argonSecret.Value,
+            KnownSecret = argonSecret.Value,
         };
         var hash = argon.GetBytes(256);
         return GetFullString(argon, hash);
