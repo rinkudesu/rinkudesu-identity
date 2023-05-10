@@ -60,6 +60,6 @@ jobs:
         shell: bash
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"rinkudesu_rinkudesu-identity" /o:"rinkudesu" /d:sonar.cs.opencover.reportsPaths="**/Rinkudesu.Identity.Service.Tests/coverage.opencover.xml" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build ./Rinkudesu.Identity.Service -c Release
-          dotnet test ./Rinkudesu.Identity.Service -c Release
+          dotnet build -c Release
+          dotnet test -c Release
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
