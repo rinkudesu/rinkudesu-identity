@@ -40,7 +40,7 @@ public class ArgonPasswordHasher : IPasswordHasher<User>
         return PasswordVerificationResult.Failed;
     }
 
-    private string HashPasswordWithSalt(string password, byte[] salt)
+    private static string HashPasswordWithSalt(string password, byte[] salt)
     {
         //todo: add a way to change those values from config file and then automatically rehash credentials on next login
         //those parameters are not configurable as changing them on a live database without a way of migrating users would probably collapse the universe
