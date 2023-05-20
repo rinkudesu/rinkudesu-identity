@@ -18,7 +18,7 @@ public class ArgonPasswordHasher : IPasswordHasher<User>
     /// <inheritdoc/>
     public string HashPassword(User user, string password)
     {
-        var salt = RandomNumberGenerator.GetBytes(128);
+        var salt = RandomNumberGenerator.GetBytes(16);
         return HashPasswordWithSalt(password, salt);
     }
 
@@ -53,7 +53,7 @@ public class ArgonPasswordHasher : IPasswordHasher<User>
             Salt = salt,
             KnownSecret = argonSecret.Value,
         };
-        var hash = argon.GetBytes(256);
+        var hash = argon.GetBytes(64);
         return GetFullString(argon, hash);
     }
 
