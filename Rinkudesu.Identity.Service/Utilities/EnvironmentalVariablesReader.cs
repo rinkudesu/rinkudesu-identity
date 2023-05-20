@@ -22,6 +22,8 @@ public static class EnvironmentalVariablesReader
     public const string JwtRsaPasswordVariableName = "RINKU_RSA_PASSWORD";
 
     private const string BASE_URL_VARIABLE_NAME = "RINKU_IDENTITY_BASEURL";
+    private const string INITIAL_USER_EMAIL = "RINKU_INITIAL_USER_EMAIL";
+    private const string INITIAL_USER_PASSWORD = "RINKU_INITIAL_USER_PASSWORD";
 
     /// <summary>
     /// Returns an env variable of the required name. If the variable is not set, throws <see cref="InvalidOperationException"/>>
@@ -37,6 +39,14 @@ public static class EnvironmentalVariablesReader
             throw new InvalidOperationException($"Environmental variable {variableName} is not set");
         }
         return variableValue;
+    }
+
+    public static bool IsDefaultUserProvided(out string email, out string password)
+    {
+        email = GetOptionalVariable(INITIAL_USER_EMAIL);
+        password = GetOptionalVariable(INITIAL_USER_PASSWORD);
+
+        return !string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password);
     }
 
     /// <summary>

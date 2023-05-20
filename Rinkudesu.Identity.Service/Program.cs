@@ -184,6 +184,26 @@ try
             var database = bootstrapScope.ServiceProvider.GetRequiredService<IdentityContext>();
             await database.Database.MigrateAsync();
         }
+        if (EnvironmentalVariablesReader.IsDefaultUserProvided(out var initialEmail, out var initialPassword))
+        {
+            var userManager = bootstrapScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            if (!await userManager.Users.AnyAsync())
+            {
+                var defaultUser = new User
+                {
+                    UserName = initialEmail,
+                    Email = initialEmail,
+                    EmailConfirmed = true,
+                };
+                var userCreationResult = await userManager.CreateAsync(defaultUser, initialPassword);
+                if (!userCreationResult.Succeeded)
+                    throw new InvalidOperationException("Failed to create default user");
+            }
+            else
+            {
+                Log.Logger.Information("Default user creation skipped as other users already exist in the database");
+            }
+        }
     }
 
     await app.RunAsync();

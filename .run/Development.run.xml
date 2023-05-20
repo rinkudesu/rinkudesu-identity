@@ -1,17 +1,19 @@
 ﻿<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Development" type="DotNetProject" factoryName=".NET Project">
-    <option name="EXE_PATH" value="$PROJECT_DIR$/Rinkudesu.Identity.Service/bin/Debug/net7.0/Rinkudesu.Identity.Service.exe" />
+    <option name="EXE_PATH" value="$PROJECT_DIR$/Rinkudesu.Identity.Service/bin/Debug/net7.0/Rinkudesu.Identity.Service.dll" />
     <option name="PROGRAM_PARAMETERS" value="--applyMigrations" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Rinkudesu.Identity.Service" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <envs>
       <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
       <env name="ASPNETCORE_URLS" value="http://localhost:5500" />
+      <env name="RINKU_ARGON_SECRET" value="not secure not random definitely string" />
       <env name="RINKU_IDENTITY_BASEURL" value="http://localhost:5500/" />
       <env name="RINKU_IDENTITY_CONNECTIONSTRING" value="Server=127.0.0.1;Port=5432;Database=rinku-identity;User Id=postgres;Password=postgres" />
       <env name="RINKU_IDENTITY_REDIS" value="127.0.0.1:6379" />
       <env name="RINKU_RSA_PASSWORD" value="test" />
-      <env name="RINKU_ARGON_SECRET" value="not secure not random definitely string" />
+      <env name="RINKU_INITIAL_USER_EMAIL" value="test@example.com" />
+      <env name="RINKU_INITIAL_USER_PASSWORD" value="qwertyuiop[]" />
     </envs>
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
