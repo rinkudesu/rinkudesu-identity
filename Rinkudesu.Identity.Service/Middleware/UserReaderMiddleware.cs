@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using Rinkudesu.Identity.Service.Models;
 
 namespace Rinkudesu.Identity.Service.Middleware;
 
+[ExcludeFromCodeCoverage]
 public class UserReaderMiddleware
 {
     private readonly RequestDelegate _next;

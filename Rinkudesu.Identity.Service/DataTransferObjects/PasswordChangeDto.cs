@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rinkudesu.Identity.Service.DataTransferObjects;
 
+[ExcludeFromCodeCoverage]
 public class PasswordChangeDto
 {
     [Required]
