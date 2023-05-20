@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Rinkudesu.Gateways.Webui.Models;
 using Rinkudesu.Identity.Service.Data;
+using Rinkudesu.Identity.Service.Middleware;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
 using Rinkudesu.Identity.Service.Services;
@@ -172,6 +173,7 @@ try
 
     app.UseAuthorization();
 
+    app.UseMiddleware<UserReaderMiddleware>();
 
     app.MapControllers();
     app.MapHealthChecks("/health");
