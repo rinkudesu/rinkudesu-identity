@@ -19,6 +19,8 @@ using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
 using Rinkudesu.Identity.Service.Services;
 using Rinkudesu.Identity.Service.Utilities;
+using Rinkudesu.Kafka.Dotnet;
+using Rinkudesu.Kafka.Dotnet.Base;
 using Rinkudesu.Services.Links.HealthChecks;
 using Serilog;
 using Serilog.Exceptions;
@@ -135,7 +137,7 @@ try
     });
 
     RegisterOtherServices(builder);
-
+    SetupKafka(builder);
 
     builder.Services.AddApiVersioning(o => {
         o.AssumeDefaultVersionWhenUnspecified = true;
@@ -228,4 +230,11 @@ void RegisterOtherServices(WebApplicationBuilder builder)
 {
     builder.Services.AddSingleton<JwtKeysRepository>();
     builder.Services.AddTransient<JwtSecurityTokenHandler>();
+}
+
+static void SetupKafka(WebApplicationBuilder builder)
+{
+    var kafkaConfig = KafkaConfigurationProvider.ReadFromEnv();
+    builder.Services.AddSingleton(kafkaConfig);
+    builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 }
