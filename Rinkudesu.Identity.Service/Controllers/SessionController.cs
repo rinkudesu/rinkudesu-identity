@@ -18,14 +18,6 @@ public class SessionController : ControllerBase
         _signInManager = signInManager;
     }
 
-    [HttpPost("wang")]
-    public async Task<ActionResult> Wang()
-    {
-        var user = new User { UserName = "test" };
-        await _userManager.CreateAsync(user, "1qazXSW@");
-        return Ok();
-    }
-
     [HttpPost("login")]
     public async Task<ActionResult> LogIn([FromForm] string userName, [FromForm] string password)
     {
