@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Rinkudesu.Identity.Service.Data;
+using Rinkudesu.Identity.Service.HostedServices;
+using Rinkudesu.Identity.Service.MessageQueues.Handlers;
+using Rinkudesu.Identity.Service.MessageQueues.Messages;
 using Rinkudesu.Identity.Service.Middleware;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
@@ -237,4 +240,8 @@ static void SetupKafka(WebApplicationBuilder builder)
     var kafkaConfig = KafkaConfigurationProvider.ReadFromEnv();
     builder.Services.AddSingleton(kafkaConfig);
     builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
+
+    builder.Services.AddSingleton<IKafkaSubscriber<SendEmailMessage>, KafkaSubscriber<SendEmailMessage>>();
+    builder.Services.AddSingleton<IKafkaSubscriberHandler<SendEmailMessage>, SendEmailMessageHandler>();
+    builder.Services.AddHostedService<SendEmailHandlerService>();
 }
