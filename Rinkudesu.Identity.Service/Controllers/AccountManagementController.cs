@@ -21,7 +21,7 @@ public class AccountManagementController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<User>> GetUserDetails()
+    public ActionResult<User> GetUserDetails()
     {
         var data = new UserDetailsDto(HttpContext.GetUser().User);
         return Ok(data);
