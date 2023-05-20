@@ -2,7 +2,7 @@
 using CommandLine;
 using Serilog;
 
-namespace Rinkudesu.Identity.Service.Models;
+namespace Rinkudesu.Identity.Service.Settings;
 
 [ExcludeFromCodeCoverage]
 public class InputArguments
