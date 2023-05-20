@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - ./identity-postgres:/var/lib/postgresql/data
-  rinkudesu-links:
+  rinkudesu-identity:
     image: ghcr.io/rinkudesu/rinkudesu-identity:latest
     restart: unless-stopped
     build:
