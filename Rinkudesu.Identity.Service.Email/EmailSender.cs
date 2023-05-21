@@ -1,12 +1,12 @@
 #pragma warning disable CA1812
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mail;
 using Microsoft.Extensions.Logging;
-using RInkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Email.EmailConnector;
 
 namespace Rinkudesu.Identity.Service.Email;
 
-internal sealed class EmailSender : IEmailSender
+public sealed class EmailSender : IEmailSender
 {
     private readonly ILogger<EmailSender> _logger;
     private readonly IEmailConnector _emailConnector;
@@ -19,12 +19,11 @@ internal sealed class EmailSender : IEmailSender
 
     public async Task SendMessage(EmailOptions options, CancellationToken cancellationToken = default)
     {
-        using var smtpMessage = new MailMessage("test@localhost.localdomain", options.To)
+        using var smtpMessage = new MailMessage(_emailConnector.From, new MailAddress(options.To))
         {
             Body = options.Content,
             IsBodyHtml = options.IsContentHtml,
             Subject = options.Subject,
-            From = new MailAddress(EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.EmailServerFrom)),
         };
         if (!string.IsNullOrWhiteSpace(options.Cc))
             smtpMessage.CC.Add(options.Cc);
@@ -32,9 +31,10 @@ internal sealed class EmailSender : IEmailSender
             smtpMessage.Bcc.Add(options.Bcc);
 
         _logger.LogInformation("Attempting to send email");
-        await _emailConnector.Client.SendMailAsync(smtpMessage, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await _emailConnector.SendMailAsync(smtpMessage, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    [ExcludeFromCodeCoverage]
     public async Task<bool> TrySendMessage(EmailOptions options, CancellationToken cancellationToken = default)
     {
         try
