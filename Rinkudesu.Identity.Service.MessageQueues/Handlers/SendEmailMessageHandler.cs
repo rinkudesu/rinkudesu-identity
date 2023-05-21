@@ -16,7 +16,7 @@ public class SendEmailMessageHandler : IKafkaSubscriberHandler<SendEmailMessage>
 
     public string Topic => Constants.TOPIC_SEND_EMAIL;
 
-    public async Task<bool> Handle(SendEmailMessage rawMessage, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<bool> Handle(SendEmailMessage rawMessage, CancellationToken cancellationToken = default)
     {
         var user = await _userManager!.FindByIdAsync(rawMessage.UserId.ToString()).ConfigureAwait(false);
 
@@ -26,7 +26,7 @@ public class SendEmailMessageHandler : IKafkaSubscriberHandler<SendEmailMessage>
             return true;
 
         var emailOptions = new EmailOptions(user.Email!, rawMessage.EmailTopic, rawMessage.EmailContent, rawMessage.IsHtml);
-        return await _emailSender!.TrySendMessage(emailOptions).ConfigureAwait(false);
+        return await _emailSender!.TrySendMessage(emailOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public SendEmailMessage Parse(string rawMessage)
