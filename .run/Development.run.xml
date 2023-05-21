@@ -8,6 +8,11 @@
       <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
       <env name="ASPNETCORE_URLS" value="http://localhost:5500" />
       <env name="RINKU_ARGON_SECRET" value="not secure not random definitely string" />
+      <env name="RINKU_EMAIL_FROM" value="test@example.com" />
+      <env name="RINKU_EMAIL_HOST" value="localhost" />
+      <env name="RINKU_EMAIL_PASSWORD" value="test" />
+      <env name="RINKU_EMAIL_PORT" value="2525" />
+      <env name="RINKU_EMAIL_USERNAME" value="test" />
       <env name="RINKU_IDENTITY_BASEURL" value="http://localhost:5500/" />
       <env name="RINKU_IDENTITY_CONNECTIONSTRING" value="Server=127.0.0.1;Port=5432;Database=rinku-identity;User Id=postgres;Password=postgres" />
       <env name="RINKU_IDENTITY_REDIS" value="127.0.0.1:6379" />
