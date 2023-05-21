@@ -1,5 +1,6 @@
 using System.Net.Mail;
 using Microsoft.Extensions.Logging;
+using RInkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Email.EmailConnector;
 
 namespace Rinkudesu.Identity.Service.Email;
@@ -22,6 +23,7 @@ internal class EmailSender : IEmailSender
             Body = options.Content,
             IsBodyHtml = options.IsContentHtml,
             Subject = options.Subject,
+            From = new MailAddress(EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.EmailServerFrom)),
         };
         if (!string.IsNullOrWhiteSpace(options.Cc))
             smtpMessage.CC.Add(options.Cc);

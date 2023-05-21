@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Mail;
+using RInkudesu.Identity.Service.Common.Utilities;
 
 namespace Rinkudesu.Identity.Service.Email.EmailConnector;
 
@@ -8,10 +9,18 @@ namespace Rinkudesu.Identity.Service.Email.EmailConnector;
 internal class EmailConnector : IEmailConnector
 {
     private readonly Lazy<SmtpClient> client = new Lazy<SmtpClient>(()
-        => new SmtpClient("127.0.0.1", 2525) //todo: read from env
+        => new SmtpClient
+        (
+            EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.EmailServerHost),
+            EnvironmentalVariablesReader.GetRequiredIntVariable(EnvironmentalVariablesReader.EmailServerPort)
+        )
         {
-            EnableSsl = false,
-            Credentials = new NetworkCredential("username", "password"),
+            EnableSsl = EnvironmentalVariablesReader.IsSet(EnvironmentalVariablesReader.EmailServerEnableSsl),
+            Credentials = new NetworkCredential
+                (
+                    EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.EmailServerUsername),
+                    EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.EmailServerPassword)
+                ),
         });
 
     /// <summary>
