@@ -1,12 +1,11 @@
-using System.Diagnostics.CodeAnalysis;
+#pragma warning disable CA1812
 using System.Net;
 using System.Net.Mail;
 using RInkudesu.Identity.Service.Common.Utilities;
 
 namespace Rinkudesu.Identity.Service.Email.EmailConnector;
 
-[SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
-internal class EmailConnector : IEmailConnector
+internal sealed class EmailConnector : IEmailConnector
 {
     private readonly Lazy<SmtpClient> client = new Lazy<SmtpClient>(()
         => new SmtpClient
@@ -32,23 +31,14 @@ internal class EmailConnector : IEmailConnector
     private readonly object _disposalMutex = new object();
     private bool isDisposed;
 
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            lock (_disposalMutex)
-            {
-                if (client.IsValueCreated)
-                    client.Value.Dispose();
-                isDisposed = true;
-            }
-        }
-    }
-
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        lock (_disposalMutex)
+        {
+            if (client.IsValueCreated)
+                client.Value.Dispose();
+            isDisposed = true;
+        }
     }
 
     // This funky disposal handling is needed as we might conceivably request disposal before client was created

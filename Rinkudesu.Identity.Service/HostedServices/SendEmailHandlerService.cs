@@ -5,7 +5,7 @@ using Rinkudesu.Kafka.Dotnet.Base;
 namespace Rinkudesu.Identity.Service.HostedServices;
 
 [ExcludeFromCodeCoverage]
-public class SendEmailHandlerService : IHostedService, IAsyncDisposable
+public sealed class SendEmailHandlerService : IHostedService, IAsyncDisposable
 {
     private readonly IKafkaSubscriber<SendEmailMessage> _subscriber;
     private readonly IKafkaSubscriberHandler<SendEmailMessage> _handler;

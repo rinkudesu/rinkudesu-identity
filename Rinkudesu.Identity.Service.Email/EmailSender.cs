@@ -1,3 +1,4 @@
+#pragma warning disable CA1812
 using System.Net.Mail;
 using Microsoft.Extensions.Logging;
 using RInkudesu.Identity.Service.Common.Utilities;
@@ -5,7 +6,7 @@ using Rinkudesu.Identity.Service.Email.EmailConnector;
 
 namespace Rinkudesu.Identity.Service.Email;
 
-internal class EmailSender : IEmailSender
+internal sealed class EmailSender : IEmailSender
 {
     private readonly ILogger<EmailSender> _logger;
     private readonly IEmailConnector _emailConnector;
