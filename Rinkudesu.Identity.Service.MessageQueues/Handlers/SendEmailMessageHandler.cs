@@ -25,7 +25,7 @@ public class SendEmailMessageHandler : IKafkaSubscriberHandler<SendEmailMessage>
         if (user is null)
             return true;
 
-        var emailOptions = new EmailOptions(user.Email!, rawMessage.EmailTopic, rawMessage.EmailContent, rawMessage.IsHtml);
+        var emailOptions = new EmailOptions(user.Email!, rawMessage.EmailSubject, rawMessage.EmailContent, rawMessage.IsHtml);
         return await _emailSender!.TrySendMessage(emailOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 

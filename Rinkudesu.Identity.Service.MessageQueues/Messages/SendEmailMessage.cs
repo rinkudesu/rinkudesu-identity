@@ -16,8 +16,8 @@ public class SendEmailMessage : GenericKafkaMessage
     /// <summary>
     /// Email topic.
     /// </summary>
-    [JsonPropertyName("email_topic")]
-    public string EmailTopic { get; set; } = string.Empty;
+    [JsonPropertyName("email_subject")]
+    public string EmailSubject { get; set; } = string.Empty;
 
     /// <summary>
     /// The actual body of an email, either in HTML or plaintext, depending on <see cref="IsHtml"/>.
@@ -35,14 +35,14 @@ public class SendEmailMessage : GenericKafkaMessage
     {
     }
 
-    public SendEmailMessage(Guid userId, string topic, string content, bool isHtml)
+    public SendEmailMessage(Guid userId, string subject, string content, bool isHtml)
     {
         UserId = userId;
-        EmailTopic = topic;
+        EmailSubject = subject;
         EmailContent = content;
         IsHtml = isHtml;
     }
 
     public bool Validate()
-        => !(UserId == Guid.Empty || string.IsNullOrWhiteSpace(EmailTopic) || string.IsNullOrWhiteSpace(EmailContent));
+        => !(UserId == Guid.Empty || string.IsNullOrWhiteSpace(EmailSubject) || string.IsNullOrWhiteSpace(EmailContent));
 }
