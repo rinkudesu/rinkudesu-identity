@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 
 namespace Rinkudesu.Identity.Service.Models;
 
 /// <inheritdoc/>
+[ExcludeFromCodeCoverage]
 public class User : IdentityUser<Guid>
 {
     #region database type changes from text to varchar

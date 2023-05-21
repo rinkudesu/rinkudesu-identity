@@ -1,10 +1,12 @@
 #pragma warning disable CA1812
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Mail;
 using RInkudesu.Identity.Service.Common.Utilities;
 
 namespace Rinkudesu.Identity.Service.Email.EmailConnector;
 
+[ExcludeFromCodeCoverage]
 internal sealed class EmailConnector : IEmailConnector
 {
     private readonly Lazy<SmtpClient> client = new Lazy<SmtpClient>(()
@@ -22,11 +24,10 @@ internal sealed class EmailConnector : IEmailConnector
                 ),
         });
 
-    /// <summary>
-    /// Returns an instance of <see cref="SmtpClient"/> that can be used to send emails.
-    /// Please note that this instance should not be disposed of in calling code as it's managed by this class.
-    /// </summary>
-    public SmtpClient Client => GetClientSafe();
+    public async Task SendMailAsync(MailMessage message, CancellationToken cancellationToken = default)
+        => await GetClientSafe().SendMailAsync(message, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+    public MailAddress From => new MailAddress(EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader.EmailServerFrom));
 
     private readonly object _disposalMutex = new object();
     private bool isDisposed;
