@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Rinkudesu.Identity.Service.Data;
+using Rinkudesu.Identity.Service.Email;
+using Rinkudesu.Identity.Service.Email.EmailConnector;
 using Rinkudesu.Identity.Service.HostedServices;
 using Rinkudesu.Identity.Service.MessageQueues.Handlers;
 using Rinkudesu.Identity.Service.MessageQueues.Messages;
@@ -83,6 +85,9 @@ try
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    builder.Services.AddEmailConnector();
+    builder.Services.AddEmailSender();
 
     RedisSettings.Current = new RedisSettings();
 
