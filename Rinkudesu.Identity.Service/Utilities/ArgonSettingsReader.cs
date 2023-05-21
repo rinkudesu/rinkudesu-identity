@@ -1,4 +1,6 @@
-﻿namespace Rinkudesu.Identity.Service.Utilities;
+﻿using RInkudesu.Identity.Service.Common.Utilities;
+
+namespace Rinkudesu.Identity.Service.Utilities;
 
 public static class ArgonSettingsReader
 {
