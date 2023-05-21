@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.DependencyModel;
+using RInkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Utilities;
 
-namespace Rinkudesu.Gateways.Webui.Models;
+namespace Rinkudesu.Identity.Service.Settings;
 
 /// <summary>
 /// Defines settings used for connection to Redis cache.

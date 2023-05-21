@@ -6,6 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.MessageQueues", "Rinkudesu.Identity.Service.MessageQueues\Rinkudesu.Identity.Service.MessageQueues.csproj", "{82D5F806-C283-4557-B3EA-5CEE92CD2EE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.Email", "Rinkudesu.Identity.Service.Email\Rinkudesu.Identity.Service.Email.csproj", "{9070B399-2C10-4D06-9FED-26C8FC1AA324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.Models", "Rinkudesu.Identity.Service.Models\Rinkudesu.Identity.Service.Models.csproj", "{0D8CD85C-8AA9-46DB-96DA-E2DB1EE9B297}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RInkudesu.Identity.Service.Common", "RInkudesu.Identity.Service.Common\RInkudesu.Identity.Service.Common.csproj", "{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.Email.Tests", "Rinkudesu.Identity.Service.Email.Tests\Rinkudesu.Identity.Service.Email.Tests.csproj", "{E0F07089-7B33-4BA9-81E7-D30E698ECA73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +32,21 @@ Global
 		{82D5F806-C283-4557-B3EA-5CEE92CD2EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82D5F806-C283-4557-B3EA-5CEE92CD2EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82D5F806-C283-4557-B3EA-5CEE92CD2EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9070B399-2C10-4D06-9FED-26C8FC1AA324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9070B399-2C10-4D06-9FED-26C8FC1AA324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9070B399-2C10-4D06-9FED-26C8FC1AA324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9070B399-2C10-4D06-9FED-26C8FC1AA324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D8CD85C-8AA9-46DB-96DA-E2DB1EE9B297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D8CD85C-8AA9-46DB-96DA-E2DB1EE9B297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D8CD85C-8AA9-46DB-96DA-E2DB1EE9B297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D8CD85C-8AA9-46DB-96DA-E2DB1EE9B297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F07089-7B33-4BA9-81E7-D30E698ECA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F07089-7B33-4BA9-81E7-D30E698ECA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F07089-7B33-4BA9-81E7-D30E698ECA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F07089-7B33-4BA9-81E7-D30E698ECA73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

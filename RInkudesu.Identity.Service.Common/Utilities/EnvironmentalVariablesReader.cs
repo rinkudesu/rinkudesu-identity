@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
-namespace Rinkudesu.Identity.Service.Utilities;
+namespace RInkudesu.Identity.Service.Common.Utilities;
 
 /// <summary>
 /// Helper class used for env variable retrieval.
@@ -20,6 +21,31 @@ public static class EnvironmentalVariablesReader
     /// Name of the variable storing the RSA private key password. If the key is not encrypted, this value should not be set.
     /// </summary>
     public const string JwtRsaPasswordVariableName = "RINKU_RSA_PASSWORD";
+
+    /// <summary>
+    /// Name of the env var with email sender hostname
+    /// </summary>
+    public const string EmailServerHost = "RINKU_EMAIL_HOST";
+    /// <summary>
+    /// Name of the env var with email sender port (should be an int)
+    /// </summary>
+    public const string EmailServerPort = "RINKU_EMAIL_PORT";
+    /// <summary>
+    /// Name of the env var indicating whether email sender should use ssl (setting this variable to non-empty value means "yes")
+    /// </summary>
+    public const string EmailServerEnableSsl = "RINKU_EMAIL_SSL";
+    /// <summary>
+    /// Name of the env var with email sender username
+    /// </summary>
+    public const string EmailServerUsername = "RINKU_EMAIL_USERNAME";
+    /// <summary>
+    /// Name of the env var with email sender password
+    /// </summary>
+    public const string EmailServerPassword = "RINKU_EMAIL_PASSWORD";
+    /// <summary>
+    /// Name of the env var with email sender "From" field (does not necessarily need to be the same as username)
+    /// </summary>
+    public const string EmailServerFrom = "RINKU_EMAIL_FROM";
 
     private const string BASE_URL_VARIABLE_NAME = "RINKU_IDENTITY_BASEURL";
     private const string INITIAL_USER_EMAIL = "RINKU_INITIAL_USER_EMAIL";
@@ -41,6 +67,12 @@ public static class EnvironmentalVariablesReader
         return variableValue;
     }
 
+    /// <summary>
+    /// Checks whether the default user credentials are provided and returns them if so
+    /// </summary>
+    /// <param name="email">Default user email</param>
+    /// <param name="password">Default user password</param>
+    /// <returns>Whether the email and password are provided</returns>
     public static bool IsDefaultUserProvided(out string email, out string password)
     {
         email = GetOptionalVariable(INITIAL_USER_EMAIL);
@@ -48,6 +80,18 @@ public static class EnvironmentalVariablesReader
 
         return !string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password);
     }
+
+    /// <summary>
+    /// Returns a required env var parsed to int. Throws if missing or not parsable.
+    /// </summary>
+    public static int GetRequiredIntVariable(string variableName)
+        => int.Parse(GetRequiredVariable(variableName), CultureInfo.InvariantCulture);
+
+    /// <summary>
+    /// Checks whether the provided env var exists and is not empty
+    /// </summary>
+    public static bool IsSet(string variableName)
+        => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(variableName));
 
     /// <summary>
     /// Returns an env variable of the required name or the <paramref name="defaultValue"/> if not set.

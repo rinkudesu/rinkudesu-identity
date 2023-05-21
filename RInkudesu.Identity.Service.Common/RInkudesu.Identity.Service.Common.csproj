@@ -11,13 +11,4 @@
       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Rinkudesu.Kafka.Dotnet" Version="0.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Rinkudesu.Identity.Service.Email\Rinkudesu.Identity.Service.Email.csproj" />
-      <ProjectReference Include="..\Rinkudesu.Identity.Service.Models\Rinkudesu.Identity.Service.Models.csproj" />
-    </ItemGroup>
-
 </Project>

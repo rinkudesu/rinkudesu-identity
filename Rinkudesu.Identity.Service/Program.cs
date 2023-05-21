@@ -12,12 +12,18 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
-using Rinkudesu.Gateways.Webui.Models;
+using RInkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Data;
+using Rinkudesu.Identity.Service.Email;
+using Rinkudesu.Identity.Service.Email.EmailConnector;
+using Rinkudesu.Identity.Service.HostedServices;
+using Rinkudesu.Identity.Service.MessageQueues.Handlers;
+using Rinkudesu.Identity.Service.MessageQueues.Messages;
 using Rinkudesu.Identity.Service.Middleware;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
 using Rinkudesu.Identity.Service.Services;
+using Rinkudesu.Identity.Service.Settings;
 using Rinkudesu.Identity.Service.Utilities;
 using Rinkudesu.Kafka.Dotnet;
 using Rinkudesu.Kafka.Dotnet.Base;
@@ -80,6 +86,9 @@ try
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    builder.Services.AddEmailConnector();
+    builder.Services.AddEmailSender();
 
     RedisSettings.Current = new RedisSettings();
 
@@ -237,4 +246,8 @@ static void SetupKafka(WebApplicationBuilder builder)
     var kafkaConfig = KafkaConfigurationProvider.ReadFromEnv();
     builder.Services.AddSingleton(kafkaConfig);
     builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
+
+    builder.Services.AddSingleton<IKafkaSubscriber<SendEmailMessage>, KafkaSubscriber<SendEmailMessage>>();
+    builder.Services.AddSingleton<IKafkaSubscriberHandler<SendEmailMessage>, SendEmailMessageHandler>();
+    builder.Services.AddHostedService<SendEmailHandlerService>();
 }

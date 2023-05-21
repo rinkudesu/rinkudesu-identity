@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
+using RInkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Utilities;
 
 namespace Rinkudesu.Identity.Service.Repositories;
