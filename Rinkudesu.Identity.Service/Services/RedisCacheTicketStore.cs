@@ -14,7 +14,7 @@ namespace Rinkudesu.Identity.Service.Services;
 [ExcludeFromCodeCoverage]
 public class RedisCacheTicketStore : ITicketStore, IDisposable
 {
-    private const string PREFIX = "SessionTicket";
+    public const string PREFIX = "SessionTicket";
 
     private readonly RedisCache _cache;
 
