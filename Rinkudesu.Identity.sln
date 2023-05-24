@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.Models", "Rinkudesu.Identity.Service.Models\Rinkudesu.Identity.Service.Models.csproj", "{0D8CD85C-8AA9-46DB-96DA-E2DB1EE9B297}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RInkudesu.Identity.Service.Common", "RInkudesu.Identity.Service.Common\RInkudesu.Identity.Service.Common.csproj", "{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.Common", "Rinkudesu.Identity.Service.Common\Rinkudesu.Identity.Service.Common.csproj", "{295D3853-F993-4AAD-BCDE-E16CC4B80FD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Identity.Service.Email.Tests", "Rinkudesu.Identity.Service.Email.Tests\Rinkudesu.Identity.Service.Email.Tests.csproj", "{E0F07089-7B33-4BA9-81E7-D30E698ECA73}"
 EndProject

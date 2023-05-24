@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
-using RInkudesu.Identity.Service.Common.Utilities;
+using Rinkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Utilities;
 
 namespace Rinkudesu.Identity.Service.Settings;

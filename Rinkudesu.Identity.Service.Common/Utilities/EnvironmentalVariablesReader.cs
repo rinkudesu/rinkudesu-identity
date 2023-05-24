@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace RInkudesu.Identity.Service.Common.Utilities;
+namespace Rinkudesu.Identity.Service.Common.Utilities;
 
 /// <summary>
 /// Helper class used for env variable retrieval.

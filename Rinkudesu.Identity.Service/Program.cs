@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
-using RInkudesu.Identity.Service.Common.Utilities;
+using Rinkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.Email;
 using Rinkudesu.Identity.Service.Email.EmailConnector;
@@ -93,6 +93,8 @@ try
     RedisSettings.Current = new RedisSettings();
 
     var redisConnectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(RedisSettings.Current.Host);
+    var redisConnectionProvider = new RedisConnectionProvider(redisConnectionMultiplexer);
+    builder.Services.AddSingleton(redisConnectionProvider);
     builder.Services.AddDataProtection().SetApplicationName("rinkudesu").PersistKeysToStackExchangeRedis(redisConnectionMultiplexer, "DataProtection-Keys");
 
 //register identity-related services that override identity defaults
@@ -239,6 +241,7 @@ void RegisterOtherServices(WebApplicationBuilder builder)
 {
     builder.Services.AddSingleton<JwtKeysRepository>();
     builder.Services.AddTransient<JwtSecurityTokenHandler>();
+    builder.Services.AddScoped<SessionTicketRepository>();
 }
 
 static void SetupKafka(WebApplicationBuilder builder)

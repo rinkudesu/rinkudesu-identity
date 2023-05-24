@@ -1,4 +1,4 @@
-﻿using RInkudesu.Identity.Service.Common.Utilities;
+﻿using Rinkudesu.Identity.Service.Common.Utilities;
 
 namespace Rinkudesu.Identity.Service.Utilities;
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Rinkudesu.Identity.Service.Common.Utilities;
 
 namespace Rinkudesu.Identity.Service.Services;
 
@@ -13,7 +14,7 @@ namespace Rinkudesu.Identity.Service.Services;
 [ExcludeFromCodeCoverage]
 public class RedisCacheTicketStore : ITicketStore, IDisposable
 {
-    private const string PREFIX = "SessionTicket-";
+    public const string PREFIX = "SessionTicket";
 
     private readonly RedisCache _cache;
 
@@ -28,8 +29,8 @@ public class RedisCacheTicketStore : ITicketStore, IDisposable
     /// <inheritdoc/>
     public async Task<string> StoreAsync(AuthenticationTicket ticket)
     {
-        var random = RandomNumberGenerator.GetBytes(512);
-        var key = PREFIX + Convert.ToBase64String(random);
+        var random = RandomNumberGenerator.GetBytes(256);
+        var key = $"{PREFIX}_{ticket.Principal.GetUserId()}_{Convert.ToBase64String(random)}";
         await SetTicket(key, ticket);
         return key;
     }

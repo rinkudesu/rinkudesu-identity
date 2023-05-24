@@ -3,5 +3,6 @@
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::E0F07089-7B33-4BA9-81E7-D30E698ECA73::net7.0::Rinkudesu.Identity.Service.Email.Tests.EmailSenderTests.SendMessage_NoCcBcc_MessageSent&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::E0F07089-7B33-4BA9-81E7-D30E698ECA73::net7.0::Rinkudesu.Identity.Service.Email.Tests.EmailSenderTests.SendMessage_CcBccBccSet_MessageSent&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::8B182DB9-86A8-44C3-900E-845FFF9D933F::net7.0::Rinkudesu.Identity.Service.Tests.SessionTicketRepositoryTests.RemoveUserSessionTickets_AllUserIdSessionsDeleted&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
