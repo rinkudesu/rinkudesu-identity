@@ -17,7 +17,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\RInkudesu.Identity.Service.Common\RInkudesu.Identity.Service.Common.csproj" />
+      <ProjectReference Include="..\Rinkudesu.Identity.Service.Common\Rinkudesu.Identity.Service.Common.csproj" />
     </ItemGroup>
 
 </Project>
