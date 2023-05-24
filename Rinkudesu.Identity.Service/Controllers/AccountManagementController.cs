@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Rinkudesu.Identity.Service.DataTransferObjects;
 using Rinkudesu.Identity.Service.Models;
+using Rinkudesu.Identity.Service.Repositories;
 using Rinkudesu.Identity.Service.Utilities;
 
 namespace Rinkudesu.Identity.Service.Controllers;
@@ -42,5 +43,14 @@ public class AccountManagementController : ControllerBase
         var reason = string.Join(", ", result.Errors.Select(e => e.Description));
         _logger.LogWarning("Password change for user {UserId} failed due to {Reason}", user.User.Id.ToString(), reason);
         return BadRequest(reason);
+    }
+
+    [HttpPost("logOutEverywhere")]
+    public async Task<ActionResult> LogOutEverywhere([FromServices] SessionTicketRepository ticketRepository)
+    {
+        var user = HttpContext.GetUser();
+        await _userManager.UpdateSecurityStampAsync(user.User);
+        await ticketRepository.RemoveUserSessionTickets(user.User.Id);
+        return Ok();
     }
 }
