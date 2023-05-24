@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Mail;
-using RInkudesu.Identity.Service.Common.Utilities;
+using Rinkudesu.Identity.Service.Common.Utilities;
 
 namespace Rinkudesu.Identity.Service.Email.EmailConnector;
 

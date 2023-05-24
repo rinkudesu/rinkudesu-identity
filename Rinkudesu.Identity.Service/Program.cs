@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
-using RInkudesu.Identity.Service.Common.Utilities;
+using Rinkudesu.Identity.Service.Common.Utilities;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.Email;
 using Rinkudesu.Identity.Service.Email.EmailConnector;
