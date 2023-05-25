@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Rinkudesu.Identity.Service.DataTransferObjects;
+using Rinkudesu.Identity.Service.MessageQueues;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
 using Rinkudesu.Identity.Service.Utilities;
+using Rinkudesu.Kafka.Dotnet.Base;
 
 namespace Rinkudesu.Identity.Service.Controllers;
 
@@ -51,6 +53,32 @@ public class AccountManagementController : ControllerBase
         var user = HttpContext.GetUser();
         await _userManager.UpdateSecurityStampAsync(user.User);
         await ticketRepository.RemoveUserSessionTickets(user.User.Id);
+        return Ok();
+    }
+
+    [HttpPost("deleteAccount")]
+    public async Task<ActionResult> DeleteAccount([FromBody] DeleteAccountDto deleteAccountDto, [FromServices] IKafkaProducer kafkaProducer, [FromServices] SessionTicketRepository sessionTicketRepository)
+    {
+        var user = HttpContext.GetUser();
+
+        // user must provide valid password before the account is deleted
+        var passwordCheck = await _userManager.CheckPasswordAsync(user.User, deleteAccountDto.Password);
+        if (!passwordCheck)
+        {
+            _logger.LogWarning("Failed user {UserId} password check before account deletion", user.User.Id.ToString());
+            return NotFound();
+        }
+
+        var result = await _userManager.DeleteAsync(user.User);
+        //send kafka message regardless, to at least remove all user data
+        await sessionTicketRepository.RemoveUserSessionTickets(user.User.Id);
+        await kafkaProducer.ProduceUserDeleted(user.User.Id);
+
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Failed to delete user {UserId} account", user.User.Id.ToString());
+            return BadRequest();
+        }
         return Ok();
     }
 }
