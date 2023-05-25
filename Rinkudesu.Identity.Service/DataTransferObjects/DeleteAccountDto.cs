@@ -7,5 +7,5 @@ namespace Rinkudesu.Identity.Service.DataTransferObjects;
 public class DeleteAccountDto
 {
     [JsonPropertyName("password")]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 }
