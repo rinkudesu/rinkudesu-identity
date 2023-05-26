@@ -81,4 +81,26 @@ public class AccountManagementController : ControllerBase
         }
         return Ok();
     }
+
+    [HttpPost("createAccount"), AllowAnonymous]
+    public async Task<ActionResult> CreateAccount([FromBody] RegisterAccountDto accountDto)
+    {
+        if (!ModelState.IsValid || accountDto.PasswordMismatch)
+            return BadRequest();
+
+        var user = Models.User.CreateWithEmail(accountDto.Email);
+        var result = await _userManager.CreateAsync(user, accountDto.Password);
+        if (!result.Succeeded)
+        {
+            var reason = string.Join(", ", result.Errors.Select(e => e.Description));
+            _logger.LogWarning("Failed to create account for email {Email} because {Reason}", accountDto.Email, reason);
+            return BadRequest(reason);
+        }
+
+        return CreatedAtAction(nameof(CreateAccount), new AccountCreatedDto
+        {
+            EmailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user),
+            UserId = user.Id,
+        });
+    }
 }
