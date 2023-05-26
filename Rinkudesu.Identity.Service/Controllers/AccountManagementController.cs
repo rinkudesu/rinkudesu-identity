@@ -103,4 +103,20 @@ public class AccountManagementController : ControllerBase
             UserId = user.Id,
         });
     }
+
+    [HttpPost("confirmEmail"), AllowAnonymous]
+    public async Task<ActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        var user = await _userManager.FindByIdAsync(confirmEmailDto.UserId.ToString());
+        if (user is null)
+            return NotFound();
+
+        var result = await _userManager.ConfirmEmailAsync(user, confirmEmailDto.EmailToken);
+        if (!result.Succeeded)
+            return NotFound();
+        return Ok();
+    }
 }
