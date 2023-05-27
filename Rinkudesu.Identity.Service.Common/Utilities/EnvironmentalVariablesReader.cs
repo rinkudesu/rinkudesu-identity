@@ -101,6 +101,8 @@ public static class EnvironmentalVariablesReader
     /// <returns>Value of the variable or the fallback <paramref name="defaultValue"/> when not set.</returns>
     public static string GetOptionalVariable(string variableName, string defaultValue = "") => Environment.GetEnvironmentVariable(variableName) ?? defaultValue;
 
+    public static bool EmailConfirmationNotNeeded => IsSet("RINKUDESU_EMAIL_CONFIRMATION_DISABLED");
+
     private static readonly Lazy<string> baseUrl = new Lazy<string>(() => GetRequiredVariable(BASE_URL_VARIABLE_NAME).TrimEnd('/') + "/");
     /// <summary>
     /// Returns the base url of the application (ie http://rinkudesu-identity:5500/) - the trailing / is always set.

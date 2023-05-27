@@ -125,8 +125,8 @@ try
         };
         o.SignIn = new SignInOptions
         {
-            RequireConfirmedAccount = true,
-            RequireConfirmedEmail = true,
+            RequireConfirmedAccount = !EnvironmentalVariablesReader.EmailConfirmationNotNeeded,
+            RequireConfirmedEmail = !EnvironmentalVariablesReader.EmailConfirmationNotNeeded,
         };
         o.Password = new PasswordOptions
         {
