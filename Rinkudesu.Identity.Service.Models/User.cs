@@ -20,4 +20,15 @@ public class User : IdentityUser<Guid>
     public override string? PhoneNumber { get; set; }
 
     #endregion
+
+    public User()
+    {
+    }
+
+    public static User CreateWithEmail(string email)
+        => new User
+        {
+            Email = email,
+            UserName = email,
+        };
 }

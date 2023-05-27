@@ -100,7 +100,7 @@ try
 //register identity-related services that override identity defaults
     builder.Services.AddScoped<IPasswordHasher<User>, ArgonPasswordHasher>();
 
-    builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<IdentityContext>();
+    builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
     builder.Services.AddScoped<IUserStore<User>, UserStore<User, Role, IdentityContext, Guid>>();
     builder.Services.AddScoped<IRoleStore<Role>, RoleStore<Role, IdentityContext, Guid>>();
     builder.Services.ConfigureApplicationCookie(o => {
@@ -125,8 +125,8 @@ try
         };
         o.SignIn = new SignInOptions
         {
-            RequireConfirmedAccount = true,
-            RequireConfirmedEmail = true,
+            RequireConfirmedAccount = !EnvironmentalVariablesReader.EmailConfirmationNotNeeded,
+            RequireConfirmedEmail = !EnvironmentalVariablesReader.EmailConfirmationNotNeeded,
         };
         o.Password = new PasswordOptions
         {
