@@ -14,6 +14,12 @@ public class SendEmailMessage : GenericKafkaMessage
     public Guid UserId { get; set; }
 
     /// <summary>
+    /// If set, the email will be sent to this email, rather than current user email.
+    /// </summary>
+    [JsonPropertyName("force_another_email")]
+    public string? ForceAnotherEmail { get; set; }
+
+    /// <summary>
     /// Email topic.
     /// </summary>
     [JsonPropertyName("email_subject")]
