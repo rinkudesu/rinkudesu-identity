@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.EntityFrameworkCore;
+using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.DataTransferObjects;
 using Rinkudesu.Identity.Service.MessageQueues;
 using Rinkudesu.Identity.Service.Models;
@@ -155,6 +158,57 @@ public class AccountManagementController : ControllerBase
             _logger.LogWarning("Failed to reset password of user {UserId} because {Reason}", model.UserId.ToString(), reason);
             return BadRequest(reason);
         }
+        return Ok();
+    }
+
+    [HttpPost("changeEmail")]
+    public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailDto model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        var user = HttpContext.GetUser();
+        if (model.Email == user.User.Email)
+            return BadRequest("Provided email is the same as before");
+
+        var token = await _userManager.GenerateChangeEmailTokenAsync(user.User, model.Email);
+        return Ok(new EmailChangeConfirmationDto(user.User.Id, model.Email, token));
+    }
+
+    [HttpPost("confirmEmailChange")]
+    public async Task<ActionResult> ConfirmEmailChange([FromBody] ConfirmEmailChangeDto model, [FromServices] IdentityContext context, [FromServices] SessionTicketRepository ticketRepository)
+    {
+        if (!ModelState.IsValid || model.UserId != HttpContext.GetUser().User.Id)
+            return BadRequest();
+
+        var user = HttpContext.GetUser();
+        var executionStrategy = context.Database.CreateExecutionStrategy();
+
+        async Task<IdentityResult> changeUsername(User actionUser, ConfirmEmailChangeDto actionModel, UserManager<User> actionManager)
+        {
+            var result = await actionManager.ChangeEmailAsync(actionUser, actionModel.NewEmail, actionModel.Token);
+            // change without explicitly aborting the transaction as this changed nothing so far and may contain valuable errors
+            if (!result.Succeeded)
+                return result;
+            if (!(await actionManager.SetUserNameAsync(actionUser, actionModel.NewEmail)).Succeeded)
+                throw new DbUpdateException("Failed to change username");
+            return result;
+        }
+        async Task<bool> verifyChanged(User actionUser, ConfirmEmailChangeDto actionModel, UserManager<User> actionManager)
+        {
+            var dbUser = await actionManager.FindByIdAsync(actionUser.Id.ToString());
+            return dbUser is not null && dbUser.Email == actionModel.NewEmail && dbUser.UserName == actionModel.NewEmail;
+        }
+        var result = await executionStrategy.ExecuteInTransactionAsync<IdentityResult>(_ => changeUsername(user.User, model, _userManager), _ =>  verifyChanged(user.User, model, _userManager));
+
+        if (!result.Succeeded)
+        {
+            var reason = string.Join(", ", result.Errors.Select(e => e.Description));
+            _logger.LogWarning("Failed to change email for user {UserId} because {Reason}", user.User.Id.ToString(), reason);
+            return BadRequest(reason);
+        }
+        // force the user to log in again to refresh email in session tickets
+        await ticketRepository.RemoveUserSessionTickets(user.User.Id);
         return Ok();
     }
 }
