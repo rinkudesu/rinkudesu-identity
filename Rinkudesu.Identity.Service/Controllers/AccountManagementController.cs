@@ -119,4 +119,42 @@ public class AccountManagementController : ControllerBase
             return NotFound();
         return Ok();
     }
+
+    [HttpPost("forgotPassword"), AllowAnonymous]
+    public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user is null)
+            return NotFound();
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        return Ok(new PasswordRecoveryDto
+        {
+            UserId = user.Id,
+            Token = token,
+        });
+    }
+
+    [HttpPost("resetPassword"), AllowAnonymous]
+    public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+    {
+        if (!ModelState.IsValid || model.PasswordMismatch)
+            return BadRequest();
+
+        var user = await _userManager.FindByIdAsync(model.UserId.ToString());
+        if (user is null)
+            return NotFound();
+
+        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+        if (!result.Succeeded)
+        {
+            var reason = string.Join(", ", result.Errors.Select(e => e.Description));
+            _logger.LogWarning("Failed to reset password of user {UserId} because {Reason}", model.UserId.ToString(), reason);
+            return BadRequest(reason);
+        }
+        return Ok();
+    }
 }
