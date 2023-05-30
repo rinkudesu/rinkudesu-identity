@@ -37,7 +37,7 @@ public class JwtKeysRepository
     /// <summary>
     /// Returns the public key in a <see cref="RsaSecurityKey"/> format.
     /// </summary>
-    public RsaSecurityKey GetRsaAsSecurityKey() => new RsaSecurityKey(GetRsaKeyPair().ExportParameters(false));
+    public RsaSecurityKey GetRsaAsSecurityKey(bool includePrivate = false) => new RsaSecurityKey(GetRsaKeyPair().ExportParameters(includePrivate));
     /// <summary>
     /// Returns the public key as a json web key.
     /// </summary>
@@ -46,5 +46,5 @@ public class JwtKeysRepository
     /// <summary>
     /// Returns the public RSA key as a signing credential
     /// </summary>
-    public SigningCredentials GetRsaAsSigningCredentials() => new SigningCredentials(GetRsaAsSecurityKey(), SecurityAlgorithms.RsaSsaPssSha256);
+    public SigningCredentials GetRsaAsSigningCredentials() => new SigningCredentials(GetRsaAsSecurityKey(true), SecurityAlgorithms.RsaSha256);
 }

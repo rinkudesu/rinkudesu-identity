@@ -190,7 +190,7 @@ try
 
     app.MapControllers();
     app.MapHealthChecks("/health");
-    app.MapGet("/.well-known/openid-configuration", () => $"{{\"issuer\":\"{baseUrl}\",\"jwks_uri\":\"{baseUrl}/api/Jwt/jwks.json\"}}");
+    app.MapGet("/.well-known/openid-configuration", () => $"{{\"issuer\":\"{baseUrl}\",\"jwks_uri\":\"{baseUrl}api/Jwt/jwks.json\"}}");
 
     using (var bootstrapScope = app.Services.CreateScope())
     {
