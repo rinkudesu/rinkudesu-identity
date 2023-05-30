@@ -22,6 +22,7 @@
       <env name="RINKU_KAFKA_CLIENT_ID" value="rinkudesu-identity" />
       <env name="RINKU_KAFKA_CONSUMER_GROUP_ID" value="rinkudesu-identity" />
       <env name="RINKU_RSA_PASSWORD" value="test" />
+      <env name="RINKUDESU_EMAIL_CONFIRMATION_DISABLED" value="1" />
     </envs>
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
