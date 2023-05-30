@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.DataTransferObjects;
@@ -13,6 +12,10 @@ using Rinkudesu.Kafka.Dotnet.Base;
 
 namespace Rinkudesu.Identity.Service.Controllers;
 
+/// <summary>
+/// Controller responsible for managing user account and settings.
+/// Unless otherwise mentioned, the user must be logged in to access this controller.
+/// </summary>
 [ApiController, Authorize]
 [ApiVersion("1"), Route("api/[controller]"), Route("api/v{version:apiVersion}/[controller]")]
 public class AccountManagementController : ControllerBase
@@ -20,20 +23,35 @@ public class AccountManagementController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly ILogger<AccountManagementController> _logger;
 
+    /// <inheritdoc />
     public AccountManagementController(UserManager<User> userManager, ILogger<AccountManagementController> logger)
     {
         _userManager = userManager;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Returns user details for currently logged-in user.
+    /// </summary>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<User> GetUserDetails()
     {
         var data = new UserDetailsDto(HttpContext.GetUser().User);
         return Ok(data);
     }
 
+    /// <summary>
+    /// Changes password of currently logged-in user.
+    /// The password must meet the minimum password requirements and both password and repeat password must match.
+    /// </summary>
+    /// <response code="400">
+    /// Returned when request model is invalid (ie. passwords don't match) or password change failed.
+    /// In the second case, an additional error string will be returned indicating why the change has failed.
+    /// </response>
     [HttpPost("changePassword")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ChangePassword([FromBody] PasswordChangeDto passwordChange)
     {
         if (!ModelState.IsValid || !passwordChange.NewPasswordsMatch)
@@ -50,7 +68,11 @@ public class AccountManagementController : ControllerBase
         return BadRequest(reason);
     }
 
+    /// <summary>
+    /// Logs the current user out of all sessions.
+    /// </summary>
     [HttpPost("logOutEverywhere")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> LogOutEverywhere([FromServices] SessionTicketRepository ticketRepository)
     {
         var user = HttpContext.GetUser();
@@ -59,7 +81,16 @@ public class AccountManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Deletes the current user account and sends a message for other microservices to remove all related data.
+    /// </summary>
+    /// <response code="200">Returned when the account was successfully deleted.</response>
+    /// <response code="400">Returned when the account failed to be deleted.</response>
+    /// <response code="404">Returned when password provided did not match.</response>
     [HttpPost("deleteAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteAccount([FromBody] DeleteAccountDto deleteAccountDto, [FromServices] IKafkaProducer kafkaProducer, [FromServices] SessionTicketRepository sessionTicketRepository)
     {
         var user = HttpContext.GetUser();
@@ -85,7 +116,22 @@ public class AccountManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Creates a new user account, but does not log the user in.
+    /// This method allows access without being logged in.
+    /// </summary>
+    /// <remarks>
+    /// Please note that if email confirmation is enabled, the user will first need to confirm the email address.
+    /// Otherwise, the login will fail.
+    /// </remarks>
+    /// <response code="201">Returns new user id and email confirmation token, if the user account was successfully created.</response>
+    /// <response code="400">
+    /// Returned when request model is invalid (ie. passwords don't match) or account creation has failed.
+    /// In the second case, an additional error string will be returned indicating why the change has failed.
+    /// </response>
     [HttpPost("createAccount"), AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateAccount([FromBody] RegisterAccountDto accountDto)
     {
         if (!ModelState.IsValid || accountDto.PasswordMismatch)
@@ -107,7 +153,17 @@ public class AccountManagementController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Confirms user email using confirmation token.
+    /// This method allows access without being logged in.
+    /// </summary>
+    /// <response code="200">Returned when email confirmation was successful.</response>
+    /// <response code="400">Returned when request model was invalid.</response>
+    /// <response code="404">Returned when either the user id or token couldn't be verified.</response>
     [HttpPost("confirmEmail"), AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
     {
         if (!ModelState.IsValid)
@@ -123,7 +179,20 @@ public class AccountManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Requests forgot password recovery token.
+    /// This method allows access without being logged in.
+    /// </summary>
+    /// <remarks>
+    /// Please note that in order for this flow to be secure, there should be no difference in the front-end between the email not being found and the email being correctly sent.
+    /// </remarks>
+    /// <response code="200">Email was valid and recovery token was generated.</response>
+    /// <response code="400">Request model was invalid.</response>
+    /// <response code="404">No user with this email address is registered.</response>
     [HttpPost("forgotPassword"), AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
     {
         if (!ModelState.IsValid)
@@ -141,7 +210,19 @@ public class AccountManagementController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Resets the password using the email recovery token. This method allows access without being logged in.
+    /// </summary>
+    /// <response code="200">Returned when the password was correctly set.</response>
+    /// <response code="400">
+    /// Returned when the model was invalid or the password was unable to be set.
+    /// In the latter case, an error string is returned indicating what went wrong.
+    /// </response>
+    /// <response code="404">Returned when user with given id was not found.</response>
     [HttpPost("resetPassword"), AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto model)
     {
         if (!ModelState.IsValid || model.PasswordMismatch)
@@ -161,7 +242,16 @@ public class AccountManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Requests user email change.
+    /// Note that this doesn't actually change the email, but just sends a confirmation to the provided address.
+    /// The user must first click the confirmation link in order to actually change the email.
+    /// </summary>
+    /// <response code="200">Returns email confirmation data required for sending the email.</response>
+    /// <response code="400">Returns when request model is not valid.</response>
     [HttpPost("changeEmail")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailDto model)
     {
         if (!ModelState.IsValid)
@@ -175,7 +265,17 @@ public class AccountManagementController : ControllerBase
         return Ok(new EmailChangeConfirmationDto(user.User.Id, model.Email, token));
     }
 
+    /// <summary>
+    /// Changes user email if the provided token is valid.
+    /// </summary>
+    /// <remarks>
+    /// Note that this method will also change the username, as we treat them as one and the same.
+    /// </remarks>
+    /// <response code="200">Returned when the email/username was changed correctly.</response>
+    /// <response code="400">Returned when the change couldn't be made. Might contain error string with more details.</response>
     [HttpPost("confirmEmailChange")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ConfirmEmailChange([FromBody] ConfirmEmailChangeDto model, [FromServices] IdentityContext context, [FromServices] SessionTicketRepository ticketRepository)
     {
         if (!ModelState.IsValid || model.UserId != HttpContext.GetUser().User.Id)
