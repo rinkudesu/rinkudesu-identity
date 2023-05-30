@@ -1,9 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using Rinkudesu.Identity.Service.MessageQueues.Messages;
 using Rinkudesu.Kafka.Dotnet.Base;
+#pragma warning disable CS1591
 
 namespace Rinkudesu.Identity.Service.HostedServices;
 
+/// <summary>
+/// Kafka message handler for sending emails.
+/// </summary>
 [ExcludeFromCodeCoverage]
 public sealed class SendEmailHandlerService : IHostedService, IAsyncDisposable
 {

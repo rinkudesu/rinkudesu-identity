@@ -1,9 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using Rinkudesu.Identity.Service.Models;
+#pragma warning disable CS1591
 
 namespace Rinkudesu.Identity.Service.Middleware;
 
+/// <summary>
+/// Used for reading currently logged in user from database based on session cookies and storing it in context items.
+/// </summary>
 [ExcludeFromCodeCoverage]
 public class UserReaderMiddleware
 {
