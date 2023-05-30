@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Serilog;
+// ReSharper disable ClassNeverInstantiated.Global
+#pragma warning disable CS1591
 
 namespace Rinkudesu.Identity.Service.Settings;
 

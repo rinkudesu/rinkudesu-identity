@@ -1,4 +1,5 @@
 ﻿using Rinkudesu.Identity.Service.Common.Utilities;
+#pragma warning disable CS1591
 
 namespace Rinkudesu.Identity.Service.Utilities;
 

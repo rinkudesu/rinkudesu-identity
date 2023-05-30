@@ -14,6 +14,9 @@ namespace Rinkudesu.Identity.Service.Services;
 [ExcludeFromCodeCoverage]
 public class RedisCacheTicketStore : ITicketStore, IDisposable
 {
+    /// <summary>
+    /// Values prefixed to all Redis session tickets.
+    /// </summary>
     public const string PREFIX = "SessionTicket";
 
     private readonly RedisCache _cache;
@@ -65,6 +68,9 @@ public class RedisCacheTicketStore : ITicketStore, IDisposable
         await _cache.SetAsync(id, ticketBytes, cacheOptions);
     }
 
+    /// <summary>
+    /// <see cref="Dispose()"/>
+    /// </summary>
     protected virtual void Dispose(bool disposing)
     {
         if (disposing)
@@ -73,6 +79,7 @@ public class RedisCacheTicketStore : ITicketStore, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         Dispose(true);

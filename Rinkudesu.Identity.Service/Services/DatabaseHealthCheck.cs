@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Rinkudesu.Identity.Service.Data;
+#pragma warning disable CS1591
 
 namespace Rinkudesu.Services.Links.HealthChecks
 {
