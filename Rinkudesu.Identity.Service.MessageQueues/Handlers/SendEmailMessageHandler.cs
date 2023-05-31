@@ -18,14 +18,23 @@ public class SendEmailMessageHandler : IKafkaSubscriberHandler<SendEmailMessage>
 
     public async Task<bool> Handle(SendEmailMessage rawMessage, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager!.FindByIdAsync(rawMessage.UserId.ToString()).ConfigureAwait(false);
+        if (rawMessage.UserId == Guid.Empty && string.IsNullOrWhiteSpace(rawMessage.ForceAnotherEmail))
+            return true; //malformed message
 
-        //consider this as if the message has been sent properly, as this probably means the user no longer exists
-        //or something along those lines, which would mean that this will never send, blocking the queue
-        if (user is null)
-            return true;
+        var email = rawMessage.ForceAnotherEmail ?? string.Empty;
 
-        var emailOptions = new EmailOptions(rawMessage.ForceAnotherEmail ?? user.Email!, rawMessage.EmailSubject, rawMessage.EmailContent, rawMessage.IsHtml);
+        if (rawMessage.UserId != Guid.Empty)
+        {
+            var user = await _userManager!.FindByIdAsync(rawMessage.UserId.ToString()).ConfigureAwait(false);
+
+            //consider this as if the message has been sent properly, as this probably means the user no longer exists
+            //or something along those lines, which would mean that this will never send, blocking the queue
+            if (user is null)
+                return true;
+            email = user.Email!;
+        }
+
+        var emailOptions = new EmailOptions(email, rawMessage.EmailSubject, rawMessage.EmailContent, rawMessage.IsHtml);
         return await _emailSender!.TrySendMessage(emailOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 

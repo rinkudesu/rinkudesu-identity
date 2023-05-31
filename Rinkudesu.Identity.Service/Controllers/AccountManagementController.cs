@@ -141,6 +141,10 @@ public class AccountManagementController : ControllerBase
         var result = await _userManager.CreateAsync(user, accountDto.Password);
         if (!result.Succeeded)
         {
+            var existing = await _userManager.FindByEmailAsync(accountDto.Email);
+            if (existing is not null)
+                return BadRequest("Email already exists");
+
             var reason = string.Join(", ", result.Errors.Select(e => e.Description));
             _logger.LogWarning("Failed to create account for email {Email} because {Reason}", accountDto.Email, reason);
             return BadRequest(reason);
