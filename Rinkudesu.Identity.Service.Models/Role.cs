@@ -16,7 +16,8 @@ public class Role : IdentityRole<Guid>
         Admin,
     }
 
-    internal static class RoleNames
+    [SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "This is essentially a glorified enum needed for controllers 'Authorise' attribute")]
+    public static class RoleNames
     {
         public const string Admin = "Admin";
     }
