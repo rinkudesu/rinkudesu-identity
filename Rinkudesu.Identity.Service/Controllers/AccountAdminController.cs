@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Rinkudesu.Identity.Service.DataTransferObjects.QueryModels;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
 
@@ -20,16 +21,15 @@ public class AccountAdminController : ControllerBase
         _accountsRepository = accountsRepository;
     }
 
-    //todo: skip and take should be replaced with a query dto of some sort with extra filtering, sorting, and such
     /// <summary>
     /// Returns a list of users that have created an account.
     /// </summary>
     /// <response code="200">Returned when user is in a role allowing them to view the list of users.</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetUsers(int skip = 0, int take = 20)
+    public async Task<ActionResult> GetUsers([FromQuery] AccountAdminQueryModel queryModel)
     {
-        var users = await _accountsRepository.GetUsers(skip: skip, take: take);
+        var users = await _accountsRepository.GetUsers(queryModel);
         return Ok(users);
     }
 }
