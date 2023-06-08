@@ -22,6 +22,7 @@ public class Role : IdentityRole<Guid>
     }
 }
 
+[ExcludeFromCodeCoverage]
 public static class RolesExtensions
 {
     public static string GetRoleName(this Role.Roles role)
