@@ -201,7 +201,14 @@ try
         }
         var roleManager = bootstrapScope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
         var adminRole = new Role { Id = Role.Roles.Admin.GetRoleId(), Name = Role.Roles.Admin.GetRoleName() };
-        await roleManager.CreateAsync(adminRole);
+        try
+        {
+            await roleManager.CreateAsync(adminRole);
+        }
+        catch (InvalidOperationException)
+        {
+            //most likely means that the role already exists, but EF is being stupid
+        }
         if (EnvironmentalVariablesReader.IsDefaultUserProvided(out var initialEmail, out var initialPassword))
         {
             var userManager = bootstrapScope.ServiceProvider.GetRequiredService<UserManager<User>>();
