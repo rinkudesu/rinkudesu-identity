@@ -253,6 +253,7 @@ void RegisterOtherServices(WebApplicationBuilder builder)
     builder.Services.AddSingleton<JwtKeysRepository>();
     builder.Services.AddTransient<JwtSecurityTokenHandler>();
     builder.Services.AddScoped<SessionTicketRepository>();
+    builder.Services.AddScoped<UserAccountsRepository>();
 }
 
 static void SetupKafka(WebApplicationBuilder builder)
