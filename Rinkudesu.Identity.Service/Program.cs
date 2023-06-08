@@ -200,7 +200,7 @@ try
             await database.Database.MigrateAsync();
         }
         var roleManager = bootstrapScope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-        var adminRole = new Role { Name = Role.Roles.Admin.GetRoleName() };
+        var adminRole = new Role { Id = Role.Roles.Admin.GetRoleId(), Name = Role.Roles.Admin.GetRoleName() };
         await roleManager.CreateAsync(adminRole);
         if (EnvironmentalVariablesReader.IsDefaultUserProvided(out var initialEmail, out var initialPassword))
         {
