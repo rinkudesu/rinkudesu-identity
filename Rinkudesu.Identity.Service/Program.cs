@@ -199,6 +199,9 @@ try
             var database = bootstrapScope.ServiceProvider.GetRequiredService<IdentityContext>();
             await database.Database.MigrateAsync();
         }
+        var roleManager = bootstrapScope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+        var adminRole = new Role { Name = Role.Roles.Admin.GetRoleName() };
+        await roleManager.CreateAsync(adminRole);
         if (EnvironmentalVariablesReader.IsDefaultUserProvided(out var initialEmail, out var initialPassword))
         {
             var userManager = bootstrapScope.ServiceProvider.GetRequiredService<UserManager<User>>();
@@ -213,6 +216,7 @@ try
                 var userCreationResult = await userManager.CreateAsync(defaultUser, initialPassword);
                 if (!userCreationResult.Succeeded)
                     throw new InvalidOperationException("Failed to create default user");
+                await userManager.AddToRoleAsync(defaultUser, adminRole.Name);
             }
             else
             {
