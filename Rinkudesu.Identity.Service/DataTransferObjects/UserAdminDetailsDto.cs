@@ -14,6 +14,13 @@ public class UserAdminDetailsDto
     /// </summary>
     public string Email { get; set; } = null!;
     /// <summary>
+    /// Email in normalised form. Useful for email comparison and duplicate detection.
+    /// </summary>
+    /// <remarks>
+    /// This field is used for email filtering and is included here mostly because it's needed in the back-end anyway.
+    /// </remarks>
+    public string EmailNormalised { get; set; } = null!;
+    /// <summary>
     /// Indicates whether the user has confirmed their email.
     /// </summary>
     public bool EmailConfirmed { get; set; }

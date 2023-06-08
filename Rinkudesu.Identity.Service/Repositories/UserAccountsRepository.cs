@@ -31,6 +31,7 @@ public class UserAccountsRepository
         {
             Id = u.Id,
             Email = u.Email!,
+            EmailNormalised = u.NormalizedEmail!,
             EmailConfirmed = u.EmailConfirmed,
             TwoFactorEnabled = u.TwoFactorEnabled,
             AccountLockedOut = u.LockoutEnd != null,

@@ -21,15 +21,53 @@ public class AccountAdminQueryModel
     /// </summary>
     [Range(0, int.MaxValue)]
     public int? Take { get; set; }
+    /// <summary>
+    /// If not null, will return only email containing the phrase provided.
+    /// </summary>
+    public string? EmailContains { get; set; }
+    /// <summary>
+    /// If <c>true</c> will return only accounts with admin privileges.
+    /// </summary>
+    public bool IsAdmin { get; set; }
+    /// <summary>
+    /// If has value, will return only accounts with the selected email confirmation state.
+    /// </summary>
+    public bool? EmailConfirmed { get; set; }
+    /// <summary>
+    /// If <c>true</c> will return only accounts that are currently locked.
+    /// </summary>
+    public bool LockedOnly { get; set; }
 
     /// <summary>
     /// Applies current query model to a provided queryable of users.
     /// </summary>
     public IQueryable<UserAdminDetailsDto> ApplyModel(IQueryable<UserAdminDetailsDto> users)
     {
+        users = ApplyFilters(users);
         users = Sort(users);
         users = SkipTake(users);
 
+        return users;
+    }
+
+    private IQueryable<UserAdminDetailsDto> ApplyFilters(IQueryable<UserAdminDetailsDto> users)
+    {
+        if (!string.IsNullOrWhiteSpace(EmailContains))
+        {
+            users = users.Where(u => u.EmailNormalised.Contains(EmailContains.ToUpperInvariant()));
+        }
+        if (IsAdmin)
+        {
+            users = users.Where(u => u.IsAdmin);
+        }
+        if (EmailConfirmed.HasValue)
+        {
+            users = users.Where(u => u.EmailConfirmed == EmailConfirmed.Value);
+        }
+        if (LockedOnly)
+        {
+            users = users.Where(u => u.AccountLockedOut);
+        }
         return users;
     }
 
