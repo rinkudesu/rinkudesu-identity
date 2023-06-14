@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.DataTransferObjects;
@@ -25,6 +26,7 @@ public class UserAccountsRepository
     /// <summary>
     /// Returns a list of existing users in DTO format.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public async Task<List<UserAdminDetailsDto>> GetUsers(AccountAdminQueryModel queryModel)
     {
         var usersQuery = _context.Users.AsNoTracking().Select(u => new UserAdminDetailsDto

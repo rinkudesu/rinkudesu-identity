@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rinkudesu.Identity.Service.DataTransferObjects.QueryModels;
 
 /// <summary>
 /// Defined query parameters for returning a list of user accounts.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class AccountAdminQueryModel
 {
     /// <summary>
