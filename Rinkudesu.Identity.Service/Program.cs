@@ -200,8 +200,15 @@ try
             await database.Database.MigrateAsync();
         }
         var roleManager = bootstrapScope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-        var adminRole = new Role { Name = Role.Roles.Admin.GetRoleName() };
-        await roleManager.CreateAsync(adminRole);
+        var adminRole = new Role { Id = Role.Roles.Admin.GetRoleId(), Name = Role.Roles.Admin.GetRoleName() };
+        try
+        {
+            await roleManager.CreateAsync(adminRole);
+        }
+        catch (InvalidOperationException)
+        {
+            //most likely means that the role already exists, but EF is being stupid
+        }
         if (EnvironmentalVariablesReader.IsDefaultUserProvided(out var initialEmail, out var initialPassword))
         {
             var userManager = bootstrapScope.ServiceProvider.GetRequiredService<UserManager<User>>();
@@ -246,6 +253,7 @@ void RegisterOtherServices(WebApplicationBuilder builder)
     builder.Services.AddSingleton<JwtKeysRepository>();
     builder.Services.AddTransient<JwtSecurityTokenHandler>();
     builder.Services.AddScoped<SessionTicketRepository>();
+    builder.Services.AddScoped<UserAccountsRepository>();
 }
 
 static void SetupKafka(WebApplicationBuilder builder)
