@@ -18,6 +18,7 @@ public class UserAccountsRepository
     /// <summary>
     /// Creates new repository instance.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public UserAccountsRepository(IdentityContext context)
     {
         _context = context;
