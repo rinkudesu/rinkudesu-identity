@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.DataTransferObjects;
-using Rinkudesu.Identity.Service.MessageQueues;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
+using Rinkudesu.Identity.Service.Services;
 using Rinkudesu.Identity.Service.Utilities;
-using Rinkudesu.Kafka.Dotnet.Base;
 
 namespace Rinkudesu.Identity.Service.Controllers;
 
@@ -91,7 +90,7 @@ public class AccountManagementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteAccount([FromBody] DeleteAccountDto deleteAccountDto, [FromServices] IKafkaProducer kafkaProducer, [FromServices] SessionTicketRepository sessionTicketRepository)
+    public async Task<ActionResult> DeleteAccount([FromBody] DeleteAccountDto deleteAccountDto, [FromServices] UserRemover userRemover)
     {
         var user = HttpContext.GetUser();
 
@@ -103,12 +102,9 @@ public class AccountManagementController : ControllerBase
             return NotFound();
         }
 
-        var result = await _userManager.DeleteAsync(user.User);
-        //send kafka message regardless, to at least remove all user data
-        await sessionTicketRepository.RemoveUserSessionTickets(user.User.Id);
-        await kafkaProducer.ProduceUserDeleted(user.User.Id);
+        var result = await userRemover.RemoveUser(user.User);
 
-        if (!result.Succeeded)
+        if (!result)
         {
             _logger.LogWarning("Failed to delete user {UserId} account", user.User.Id.ToString());
             return BadRequest();

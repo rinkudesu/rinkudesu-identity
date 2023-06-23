@@ -5,6 +5,7 @@ using Rinkudesu.Identity.Service.DataTransferObjects;
 using Rinkudesu.Identity.Service.DataTransferObjects.QueryModels;
 using Rinkudesu.Identity.Service.Models;
 using Rinkudesu.Identity.Service.Repositories;
+using Rinkudesu.Identity.Service.Services;
 using Rinkudesu.Identity.Service.Utilities;
 
 namespace Rinkudesu.Identity.Service.Controllers;
@@ -62,5 +63,29 @@ public class AccountAdminController : ControllerBase
             return BadRequest();
 
         return CreatedAtAction(nameof(CreateUser), await _accountsRepository.GetUser(user.Id, cancellationToken));
+    }
+
+    /// <summary>
+    /// Removes user with the given id.
+    /// </summary>
+    /// <response code="200">Returned when user was properly deleted.</response>
+    /// <response code="400">Returned when id was empty or user was unable to be removed.</response>
+    /// <response code="404">Returned when user with given id doesn't exist.</response>
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteUser(Guid id, [FromServices] UserRemover userRemover)
+    {
+        if (id == Guid.Empty)
+            return BadRequest();
+
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user is null)
+            return NotFound();
+
+        if (await userRemover.RemoveUser(user))
+            return Ok();
+        return BadRequest();
     }
 }
