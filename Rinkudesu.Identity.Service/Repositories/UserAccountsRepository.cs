@@ -30,7 +30,20 @@ public class UserAccountsRepository
     [ExcludeFromCodeCoverage]
     public async Task<List<UserAdminDetailsDto>> GetUsers(AccountAdminQueryModel queryModel)
     {
-        var usersQuery = _context.Users.AsNoTracking().Select(u => new UserAdminDetailsDto
+        var usersQuery = GetUsersQuery();
+        usersQuery = queryModel.ApplyModel(usersQuery);
+        return await usersQuery.ToListAsync();
+    }
+
+    /// <summary>
+    /// Returns a user with given id, if exists.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    public async Task<UserAdminDetailsDto?> GetUser(Guid userId, CancellationToken cancellationToken = default)
+        => await GetUsersQuery().FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+
+    private IQueryable<UserAdminDetailsDto> GetUsersQuery()
+        => _context.Users.AsNoTracking().Select(u => new UserAdminDetailsDto
         {
             Id = u.Id,
             Email = u.Email!,
@@ -40,7 +53,4 @@ public class UserAccountsRepository
             AccountLockedOut = u.LockoutEnd != null,
             IsAdmin = _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == Role.Roles.Admin.GetRoleId()),
         });
-        usersQuery = queryModel.ApplyModel(usersQuery);
-        return await usersQuery.ToListAsync();
-    }
 }
