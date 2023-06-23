@@ -42,6 +42,7 @@ public class UserAccountsRepository
     public async Task<UserAdminDetailsDto?> GetUser(Guid userId, CancellationToken cancellationToken = default)
         => await GetUsersQuery().FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
+    [ExcludeFromCodeCoverage]
     private IQueryable<UserAdminDetailsDto> GetUsersQuery()
         => _context.Users.AsNoTracking().Select(u => new UserAdminDetailsDto
         {
