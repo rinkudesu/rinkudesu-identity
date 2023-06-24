@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Identity.Service.Data;
 using Rinkudesu.Identity.Service.DataTransferObjects;
@@ -14,14 +15,16 @@ namespace Rinkudesu.Identity.Service.Repositories;
 public class UserAccountsRepository
 {
     private readonly IdentityContext _context;
+    private readonly UserManager<User> _userManager;
 
     /// <summary>
     /// Creates new repository instance.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public UserAccountsRepository(IdentityContext context)
+    public UserAccountsRepository(IdentityContext context, UserManager<User> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     /// <summary>
@@ -33,6 +36,24 @@ public class UserAccountsRepository
         var usersQuery = GetUsersQuery();
         usersQuery = queryModel.ApplyModel(usersQuery);
         return await usersQuery.ToListAsync();
+    }
+
+    /// <summary>
+    /// Changes the user assignment to an admin role, if possible.
+    /// </summary>
+    /// <remarks>
+    /// Note that it's necessary to expire all user sessions on role change, as this information is stored in the session ticket as well.
+    /// </remarks>
+    /// <returns><c>true</c> if the role has been changed correctly, <c>false</c> otherwise.</returns>
+    [ExcludeFromCodeCoverage]
+    public async Task<bool> ChangeAdminRights(User user, bool admin)
+    {
+        if (await _userManager.IsInRoleAsync(user, Role.RoleNames.Admin) == admin)
+            return false;
+
+        if (admin)
+            return (await _userManager.AddToRoleAsync(user, Role.RoleNames.Admin)).Succeeded;
+        return (await _userManager.RemoveFromRoleAsync(user, Role.RoleNames.Admin)).Succeeded;
     }
 
     /// <summary>
