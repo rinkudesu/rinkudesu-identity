@@ -66,6 +66,30 @@ public class AccountAdminController : ControllerBase
     }
 
     /// <summary>
+    /// Changes the user account properties based on provided options.
+    /// </summary>
+    /// <response code="200">Returned when user account was updated correctly.</response>
+    /// <response code="400">Returned when request data was malformed.</response>
+    /// <response code="404">Returned when user account wasn't found.</response>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ModifyUser(Guid id, [FromBody] AdminUserModificationDto modification, [FromServices] SessionTicketRepository sessionTicketRepository)
+    {
+        if (id == Guid.Empty || !ModelState.IsValid)
+            return BadRequest();
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user is null)
+            return NotFound();
+
+        if (modification.Admin.HasValue && await _accountsRepository.ChangeAdminRights(user, modification.Admin.Value))
+            await sessionTicketRepository.RemoveUserSessionTickets(id);
+
+        return Ok(await _accountsRepository.GetUser(id));
+    }
+
+    /// <summary>
     /// Removes user with the given id.
     /// </summary>
     /// <response code="200">Returned when user was properly deleted.</response>
