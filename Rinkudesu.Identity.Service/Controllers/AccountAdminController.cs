@@ -85,6 +85,11 @@ public class AccountAdminController : ControllerBase
 
         if (modification.Admin.HasValue && await _accountsRepository.ChangeAdminRights(user, modification.Admin.Value))
             await sessionTicketRepository.RemoveUserSessionTickets(id);
+        if (modification.Locked.HasValue)
+            user.SetLockoutState(modification.Locked.Value);
+
+        // just assume that something has change and update user once at the end
+        await _userManager.UpdateAsync(user);
 
         return Ok(await _accountsRepository.GetUser(id));
     }

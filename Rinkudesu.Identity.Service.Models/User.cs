@@ -31,4 +31,12 @@ public class User : IdentityUser<Guid>
             Email = email,
             UserName = email,
         };
+
+    public void SetLockoutState(bool enabled)
+    {
+        if (enabled)
+            LockoutEnd = DateTimeOffset.MaxValue;
+        else
+            LockoutEnd = null;
+    }
 }
