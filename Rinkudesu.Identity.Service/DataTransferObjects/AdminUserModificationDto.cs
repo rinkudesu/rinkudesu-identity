@@ -15,4 +15,9 @@ public class AdminUserModificationDto
     /// Indicates whether the user should be granted admin rights.
     /// </summary>
     public bool? Admin { get; set; }
+
+    /// <summary>
+    /// Indicates whether the user account should be locked or unlocked.
+    /// </summary>
+    public bool? Locked { get; set; }
 }
