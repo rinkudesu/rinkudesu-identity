@@ -87,6 +87,8 @@ public class AccountAdminController : ControllerBase
             await sessionTicketRepository.RemoveUserSessionTickets(id);
         if (modification.Locked.HasValue)
             user.SetLockoutState(modification.Locked.Value);
+        if (modification.EmailConfirmed.HasValue)
+            user.EmailConfirmed = modification.EmailConfirmed.Value;
 
         // just assume that something has change and update user once at the end
         await _userManager.UpdateAsync(user);
