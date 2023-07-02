@@ -20,4 +20,9 @@ public class AdminUserModificationDto
     /// Indicates whether the user account should be locked or unlocked.
     /// </summary>
     public bool? Locked { get; set; }
+
+    /// <summary>
+    /// Indicates whether the email should be set as confirmed or not.
+    /// </summary>
+    public bool? EmailConfirmed { get; set; }
 }
